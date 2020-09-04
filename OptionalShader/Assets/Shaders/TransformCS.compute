@@ -1,0 +1,20 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+struct InputData
+{
+	float4 vertex;
+	float4x4 transformMatrix;
+};
+
+StructuredBuffer<InputData> inputData;
+RWStructuredBuffer<float3> outputData;
+
+[numthreads(64,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	outputData[id.x] = mul(inputData[id.x].transformMatrix, inputData[id.x].vertex).xyz;	
+}
